@@ -5,6 +5,7 @@ public class Player_Motor : MonoBehaviour
 {
     public static Player_Motor Instance;
     public float moveSpeed = 10f;
+    public float gravity = 20f;
     public Vector3 moveVector { get; set; }
 
 	void Awake ()
@@ -29,6 +30,10 @@ public class Player_Motor : MonoBehaviour
 
         //set magnitude
         moveVector *= moveSpeed;
+
+        //account for gravity
+        var deltaYGrav = moveVector.y - gravity * Time.deltaTime;
+        moveVector = new Vector3(moveVector.x, deltaYGrav, moveVector.z);
 
         //convert from units per update to units per second
         moveVector *= Time.deltaTime;
