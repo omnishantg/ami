@@ -45,7 +45,7 @@ public class Player_Motor : MonoBehaviour
     void SnapAlignCharacterWithCamera()
     {
         //if player is moving, align character with direction of camera
-
+        //can remove this check if we want Ami to always be facing the direction in which the camera is facing
         if(moveVector.x != 0 || moveVector.z != 0)
         {
             transform.rotation = Quaternion.Euler(transform.eulerAngles.x, 

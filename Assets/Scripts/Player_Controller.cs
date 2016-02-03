@@ -10,6 +10,7 @@ public class Player_Controller : MonoBehaviour
     {
         characterController = GetComponent("CharacterController") as CharacterController;
         Instance = this;
+        Player_Camera.createMainCamera();
 	}
 
 	void Update ()
