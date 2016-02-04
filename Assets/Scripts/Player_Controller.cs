@@ -29,10 +29,14 @@ public class Player_Controller : MonoBehaviour
 
         Player_Motor.Instance.moveVector = Vector3.zero;
 
-        if (Input.GetAxis("Vertical") > deadZone || Input.GetAxis("Vertical") < -deadZone)
-            Player_Motor.Instance.moveVector += new Vector3(0, 0, Input.GetAxis("Vertical"));
+		if (Input.GetAxis ("Vertical") > deadZone || Input.GetAxis ("Vertical") < -deadZone) 
+		{
+			Player_Motor.Instance.moveVector += new Vector3 (0, 0, Input.GetAxis ("Vertical"));
+		}
 
-        if (Input.GetAxis("Horizontal") > deadZone || Input.GetAxis("Horizontal") < -deadZone)
-            Player_Motor.Instance.moveVector += new Vector3(Input.GetAxis("Horizontal"), 0, 0);
-    }
+		if (Input.GetAxis ("Horizontal") > deadZone || Input.GetAxis ("Horizontal") < -deadZone) 
+		{
+			Player_Motor.Instance.moveVector += new Vector3 (Input.GetAxis ("Horizontal"), 0, 0);
+		}
+	}
 }

@@ -54,11 +54,13 @@ public class Player_Camera : MonoBehaviour
     {
         var deadZone = 0.01f;
 
-        if (Input.GetMouseButton(1))
-        {
-            mouseX += Input.GetAxis("Mouse X") * mouse_Sensitivity_X;
-            mouseY -= Input.GetAxis("Mouse Y") * mouse_Sensitivity_Y;
-        }
+		//requires the player to hold Z to move the camera
+		//if (Input.GetKey(KeyCode.Z)) {
+			if (Input.GetMouseButton (1)) {
+				mouseX += Input.GetAxis ("Mouse X") * mouse_Sensitivity_X;
+				mouseY -= Input.GetAxis ("Mouse Y") * mouse_Sensitivity_Y;
+			}
+		//}
 
         //clamp mouse_y rotation
         mouseY = Helper.ClampAngle(mouseY, minLimit_Y, maxLimit_Y);

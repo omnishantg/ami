@@ -40,18 +40,17 @@ public class Player_Motor : MonoBehaviour
 
         //Move player in world space
         Player_Controller.characterController.Move(moveVector);
+		if (moveVector.x != 0 || moveVector.z != 0)
+			transform.rotation = Quaternion.LookRotation (new Vector3 (moveVector.x, 0f, moveVector.z));
     }
 
     void SnapAlignCharacterWithCamera()
     {
-        //if player is moving, align character with direction of camera
-        //can remove this check if we want Ami to always be facing the direction in which the camera is facing
         if(moveVector.x != 0 || moveVector.z != 0)
         {
             transform.rotation = Quaternion.Euler(transform.eulerAngles.x, 
                                                   Camera.main.transform.eulerAngles.y, 
                                                   transform.eulerAngles.z);
         }
-
     }
 }
