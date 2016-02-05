@@ -5,12 +5,12 @@ public class Player_Camera : MonoBehaviour
 {
     public static Player_Camera Instance;
     public Transform TargetLookAt;
-    public float distance = 5f;
-    public float minDistance = 3f;
+    public float distance = 7.5f;
+    public float minDistance = 6f;
     public float maxDistance = 10f;
-    public float distanceSmooth = .05f;
-    public float x_Smooth = .05f;
-    public float y_Smooth = .1f;
+    public float distanceSmooth = 0.1f;
+    public float x_Smooth = 1.8f;
+    public float y_Smooth = 1.8f;
     public float mouse_Sensitivity_X = 5f;
     public float mouse_Sensitivity_Y = 5f;
     public float mouse_Sensitivity_Wheel = 5f;
@@ -27,6 +27,7 @@ public class Player_Camera : MonoBehaviour
     private float velocityZ = 0f;
     private Vector3 pos = Vector3.zero;
     private Vector3 targetPosition = Vector3.zero;
+	private Quaternion cameraRotation;
 
     void Awake()
     {
@@ -46,7 +47,8 @@ public class Player_Camera : MonoBehaviour
             return;
 
         HandlePlayerInput();
-        CalcTargetPos();
+		CalcTargetPos ();
+
         posUpdate();
     }
 
@@ -54,16 +56,31 @@ public class Player_Camera : MonoBehaviour
     {
         var deadZone = 0.01f;
 
-		//requires the player to hold Z to move the camera
-		//if (Input.GetKey(KeyCode.Z)) {
-			if (Input.GetMouseButton (1)) {
-				mouseX += Input.GetAxis ("Mouse X") * mouse_Sensitivity_X;
-				mouseY -= Input.GetAxis ("Mouse Y") * mouse_Sensitivity_Y;
-			}
-		//}
+		Transform amiTransform = GameObject.Find ("ami").GetComponent<Transform> ();
+		cameraRotation = amiTransform.rotation;
+		mouseX = amiTransform.eulerAngles.x;
+		mouseY = amiTransform.eulerAngles.y;
+
+		if (Input.GetAxis ("Horizontal") != 0) {
+			x_Smooth = 1.8f;
+		} else {
+			x_Smooth = .2f;
+		}
+
+		if (Input.GetMouseButton (1)) {
+			mouseX += Input.GetAxis ("Mouse X") * mouse_Sensitivity_X;
+			mouseY -= Input.GetAxis ("Mouse Y") * mouse_Sensitivity_Y;
+			Quaternion temp = Quaternion.Euler (mouseX, mouseY, 0f);
+			cameraRotation = temp;
+			//cameraRotation = Quaternion.Euler(cameraRotation.eulerAngles.x + temp.eulerAngles.x, cameraRotation.eulerAngles.y - temp.eulerAngles.y, 0f);
+		} else if (Input.GetKey (KeyCode.Z)) {
+			x_Smooth = .2f;
+		}
+
+
 
         //clamp mouse_y rotation
-        mouseY = Helper.ClampAngle(mouseY, minLimit_Y, maxLimit_Y);
+       	mouseY = Helper.ClampAngle(mouseY, minLimit_Y, maxLimit_Y);
 
         if (Input.GetAxis("Mouse ScrollWheel") < -deadZone || Input.GetAxis("Mouse ScrollWheel") > deadZone)
         {
@@ -76,24 +93,23 @@ public class Player_Camera : MonoBehaviour
     {
         //eval dist
         distance = Mathf.SmoothDamp(distance, targetDistance, ref velocityDistance, distanceSmooth);
-
+		Mathf.Clamp (distance, minDistance, maxDistance);
         //calculate target postion
-        targetPosition = CalcPostion(mouseY, mouseX, distance);
+        targetPosition = CalcPosition();
     }
 
-    Vector3 CalcPostion(float rotationX, float rotationY, float dist)
+    Vector3 CalcPosition()
     {
-        Vector3 direction = new Vector3(0, 0, -dist);
-        Quaternion rot = Quaternion.Euler(rotationX, rotationY, 0f);
-        return TargetLookAt.position + rot * direction;
+        Vector3 direction = new Vector3(0, 2f, -distance);
+		return TargetLookAt.position + cameraRotation * direction;
     }
-
+		
     void posUpdate()
     {
         var posX = Mathf.SmoothDamp(pos.x, targetPosition.x, ref velocityX, x_Smooth);
         var posY = Mathf.SmoothDamp(pos.y, targetPosition.y, ref velocityY, y_Smooth);
         var posZ = Mathf.SmoothDamp(pos.z, targetPosition.z, ref velocityZ, x_Smooth);
-        pos = new Vector3(posX, posY, posZ);
+		pos = new Vector3 (posX, posY, posZ);
 
         transform.position = pos;
 
@@ -106,6 +122,7 @@ public class Player_Camera : MonoBehaviour
         mouseY = 10f;
         distance = startDistance;
         targetDistance = distance;
+
     }
 
     public static void createMainCamera()

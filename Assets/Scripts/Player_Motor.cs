@@ -21,6 +21,7 @@ public class Player_Motor : MonoBehaviour
 
     void ProcessMotion()
     {
+
         //Transforms moveVector to world space
         moveVector = transform.TransformDirection(moveVector);
 
@@ -38,8 +39,10 @@ public class Player_Motor : MonoBehaviour
         //convert from units per update to units per second
         moveVector *= Time.deltaTime;
 
+
         //Move player in world space
         Player_Controller.characterController.Move(moveVector);
+
 		if (moveVector.x != 0 || moveVector.z != 0)
 			transform.rotation = Quaternion.LookRotation (new Vector3 (moveVector.x, 0f, moveVector.z));
     }
