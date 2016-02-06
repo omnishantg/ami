@@ -101,7 +101,7 @@ public class Player_Camera : MonoBehaviour
     Vector3 CalcPosition()
     {
         Vector3 direction = new Vector3(0, 2f, -distance);
-		return TargetLookAt.position + cameraRotation * direction;
+		return TargetLookAt.position + TargetLookAt.up * 5f - TargetLookAt.forward * 10f;
     }
 		
     void posUpdate()
@@ -112,6 +112,8 @@ public class Player_Camera : MonoBehaviour
 		pos = new Vector3 (posX, posY, posZ);
 
         transform.position = pos;
+
+        transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * x_Smooth);
 
         transform.LookAt(TargetLookAt);
     }
@@ -152,7 +154,6 @@ public class Player_Camera : MonoBehaviour
             targetLookAt = new GameObject("targetLookAt");
             targetLookAt.transform.position = Vector3.zero;
         }
-
         myCam.TargetLookAt = targetLookAt.transform;
     }
 }

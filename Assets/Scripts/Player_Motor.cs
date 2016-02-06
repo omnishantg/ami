@@ -33,8 +33,8 @@ public class Player_Motor : MonoBehaviour
         moveVector *= moveSpeed;
 
         //account for gravity
-        var deltaYGrav = moveVector.y - gravity * Time.deltaTime;
-        moveVector = new Vector3(moveVector.x, deltaYGrav, moveVector.z);
+        //var deltaYGrav = moveVector.y - gravity * Time.deltaTime;
+        moveVector = new Vector3(moveVector.x, -9.82f, moveVector.z);
 
         //convert from units per update to units per second
         moveVector *= Time.deltaTime;
